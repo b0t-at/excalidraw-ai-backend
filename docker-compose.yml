@@ -1,0 +1,11 @@
+version: '3'
+services:
+  excalidraw-ai-backend:
+    build: .
+    image: excalidraw-ai-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - AZURE_OPENAI_API_KEY=<your_api_key_here>
+      - AZURE_OPENAI_ENDPOINT=<your_endpoint_here>
+      - ALLOWED_HOST=<allowed_host>

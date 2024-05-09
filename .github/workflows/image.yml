@@ -1,4 +1,4 @@
-name: excalidraw-stack Image Nightly
+name: excalidraw AI Image Nightly
 
 on:
   workflow_dispatch:

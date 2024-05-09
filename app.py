@@ -1,10 +1,23 @@
-from flask import Flask, request, jsonify
+from flask import Flask, make_response, request, jsonify
 from flask_cors import CORS
 import os
-import openai
+from openai import AzureOpenAI
+import re
 
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": os.getenv('ALLOWED_HOST')}})
+model = "gpt-4-standard"
+print(os.getenv("AZURE_OPENAI_API_KEY"))
+client = AzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),  
+    api_version="2024-02-01",
+    azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+)
+
+app = Flask("excalidraw-ai-backend")
+allowed_host = os.getenv('ALLOWED_HOST')
+if allowed_host:
+    CORS(app, resources={r"/*": {"origins": allowed_host}})
+else:
+    CORS(app)
 
 @app.route('/v1/ai/text-to-diagram/generate', methods=['POST'])
 def generate_diagram():
@@ -12,16 +25,20 @@ def generate_diagram():
     prompt = data.get('prompt', '')
 
     # Call the OpenAI API
-    response = openai.ChatCompletion.create(
-      model="gpt-4-1106-preview",
-      messages=[
-            {"role": "system", "content": "Translate the following user prompt into a diagram."},
-            {"role": "user", "content": prompt},
-        ],
-    )
+    response = client.chat.completions.create(model=model,
+    messages=[
+          {"role": "system", "content": "You are a mermaid diagram expert. Visualize the following user prompt in a mermaid diagram and return the code for the diagram. Only return the mermaid code and no additional text. Do not include the user prompt in the response."},
+          {"role": "user", "content": prompt},
+      ])
 
-    messages = response['choices'][0]['message']
-    return jsonify({"generatedResponse": ''.join(message['content'] for message in messages)})
+    response_content = response.choices[0].message.content
+
+    stripped_response = re.sub(r'^.*```mermaid\n', '', response_content)
+    stripped_response = re.sub(r'\n```$', '', stripped_response)
+
+    response = make_response(jsonify({"generatedResponse": stripped_response}))
+    response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    return response
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
