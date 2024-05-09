@@ -13,9 +13,9 @@ client = AzureOpenAI(
 )
 
 app = Flask("excalidraw-ai-backend")
-allowed_host = os.getenv('ALLOWED_HOST')
-if allowed_host:
-    CORS(app, resources={r"/*": {"origins": allowed_host}})
+allowed_origin = os.getenv('ALLOWED_ORIGIN')
+if allowed_origin:
+    CORS(app, resources={r"/*": {"origins": allowed_origin}})
 else:
     CORS(app)
 
