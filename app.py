@@ -5,7 +5,6 @@ from openai import AzureOpenAI
 import re
 
 model = "gpt-4-standard"
-print(os.getenv("AZURE_OPENAI_API_KEY"))
 client = AzureOpenAI(
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),  
     api_version="2024-02-01",
