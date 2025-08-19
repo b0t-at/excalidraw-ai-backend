@@ -8,4 +8,6 @@ services:
     environment:
       - AZURE_OPENAI_API_KEY=<your_api_key_here>
       - AZURE_OPENAI_ENDPOINT=<your_endpoint_here>
+      - AZURE_OPENAI_API_VERSION=2024-12-01-preview
+      - AZURE_OPENAI_MODEL=gpt-4.1
       - ALLOWED_ORIGIN=https://<allowed_origin>
