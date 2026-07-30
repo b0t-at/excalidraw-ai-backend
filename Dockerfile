@@ -1,5 +1,5 @@
 # Verwenden Sie ein offizielles Python-Laufzeitbild als Elternbild
-FROM python:3.8-slim-buster
+FROM python:3.11-slim-buster
 
 # Setzen Sie die Arbeitsumgebung im Container auf /app
 WORKDIR /app
