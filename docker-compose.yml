@@ -9,3 +9,13 @@ services:
       - AZURE_OPENAI_API_VERSION=2024-12-01-preview
       - AZURE_OPENAI_MODEL=gpt-4.1
       - ALLOWED_ORIGIN=https://<allowed_origin>
+      - RATE_LIMIT=10 per minute;100 per day
+      - MAX_PROMPT_LENGTH=2000
+      - TRUSTED_PROXY_COUNT=1
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
